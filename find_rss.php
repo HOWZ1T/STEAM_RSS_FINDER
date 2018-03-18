@@ -325,7 +325,13 @@
 	$page_link = search($term);
 	if($page_link == null)
 	{
-		die("\n\n\n*********************\n* NO LINKS FOUND :( *\n*********************\n\n\n");
+		$ps = "*          NO LINKS FOUND :(          *";
+		$stars = "";
+		for($i = 0; $i < strlen($ps); $i++)
+		{
+			$stars .= "*";
+		}
+		die("\n\n\n$stars\n$ps\n$stars\n\n\n");
 	}
 
 	$result = getUpdateLink($page_link);
@@ -335,11 +341,34 @@
 
 	if($result == null)
 	{
-		echo "\n\n\n*************************\n* NO RSS FEED FOUND! :( *\n*************************\n\n\n";
+		$ps = "* NO RSS FEED FOUND :(                   *";
+		$ns = "* {$GLOBALS['name']} ";
+		$pl = strlen($ps);
+		$nl = strlen($ns);
+		$diff = 0;
+		if($nl >= $pl)
+		{
+			$diff = $nl - $pl;
+		}
+		else
+		{
+			$diff = $pl - $nl;
+		}
+		for($i = 0; $i < $diff-1; $i++)
+		{
+			$ns .= ' ';
+		}
+		$ns .= '*';
+		$stars = "";
+		for($i = 0; $i < strlen($ps); $i++)
+		{
+			$stars .= "*";
+		}
+		die("\n\n\n$stars\n$ns\n$stars\n$ps\n$stars\n\n\n");
 	}
 	else
 	{
-		$ps = "* RSS FEED: ".$result." *";
+		$ps = "*     RSS FEED: ".$result."     *";
 		$ns = "* {$GLOBALS['name']} ";
 		$pl = strlen($ps);
 		$nl = strlen($ns);
