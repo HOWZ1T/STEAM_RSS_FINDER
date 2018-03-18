@@ -313,86 +313,120 @@
 		echo "found rss link: ".$rss_link."\n";
 		return $rss_link;
 	}
-
-	$term = "";
-	for($i = 1; $i < count($argv); $i++)
-	{
-		$term .= $argv[$i]."%20";
-	}
-	$term = strtolower(substr($term, 0, strlen($term)-3));
-	echo "search term = ".$term."\n";
 	
-	$page_link = search($term);
-	if($page_link == null)
+	function search_driver($term, $noFormat=false)
 	{
-		$ps = "*          NO LINKS FOUND :(          *";
-		$stars = "";
-		for($i = 0; $i < strlen($ps); $i++)
+		echo "search term = ".$term."\n";
+	
+		$page_link = search($term);
+		if($page_link == null)
 		{
-			$stars .= "*";
+			$ps = "*          NO LINKS FOUND :(          *";
+			$stars = "";
+			for($i = 0; $i < strlen($ps); $i++)
+			{
+				$stars .= "*";
+			}
+			
+			if($noFormat == true) {return "NO LINKS FOUND :(";}
+			return "$stars\n$ps\n$stars\n";
 		}
-		die("\n\n\n$stars\n$ps\n$stars\n\n\n");
-	}
 
-	$result = getUpdateLink($page_link);
-	if($result == null) {$result = bypassAgeGate($page_link);}
-	if($result == null) {$result = getRSSviaCommunity($page_link);}
-	$result = getRSS($result);
-
-	if($result == null)
-	{
-		$ps = "* NO RSS FEED FOUND :(                   *";
-		$ns = "* {$GLOBALS['name']} ";
-		$pl = strlen($ps);
-		$nl = strlen($ns);
-		$diff = 0;
-		if($nl >= $pl)
+		$result = getUpdateLink($page_link);
+		if($result == null) {$result = bypassAgeGate($page_link);}
+		if($result == null) {$result = getRSSviaCommunity($page_link);}
+		$result = getRSS($result);
+		if($result == null)
 		{
-			$diff = $nl - $pl;
+			$ps = "* NO RSS FEED FOUND :(                   *";
+			$ns = "* {$GLOBALS['name']} ";
+			$pl = strlen($ps);
+			$nl = strlen($ns);
+			$diff = 0;
+			if($nl >= $pl)
+			{
+				$diff = $nl - $pl;
+			}
+			else
+			{
+				$diff = $pl - $nl;
+			}
+			for($i = 0; $i < $diff-1; $i++)
+			{
+				$ns .= ' ';
+			}
+			$ns .= '*';
+			$stars = "";
+			for($i = 0; $i < strlen($ps); $i++)
+			{
+				$stars .= "*";
+			}
+			
+			if($noFormat == true) {return "NO RSS FEED FOUND :(";}
+			return "$stars\n$ns\n$stars\n$ps\n$stars\n";
 		}
 		else
 		{
-			$diff = $pl - $nl;
+			$ps = "*     RSS FEED: ".$result."     *";
+			$ns = "* {$GLOBALS['name']} ";
+			$pl = strlen($ps);
+			$nl = strlen($ns);
+			$diff = 0;
+			if($nl >= $pl)
+			{
+				$diff = $nl - $pl;
+			}
+			else
+			{
+				$diff = $pl - $nl;
+			}
+			for($i = 0; $i < $diff-1; $i++)
+			{
+				$ns .= ' ';
+			}
+			$ns .= '*';
+			$stars = "";
+			for($i = 0; $i < strlen($ps); $i++)
+			{
+				$stars .= "*";
+			}
+			if($noFormat == true) {return $result;}
+			return "$stars\n$ns\n$stars\n$ps\n$stars\n";
 		}
-		for($i = 0; $i < $diff-1; $i++)
+		
+		return "";
+	}
+
+	$terms = array();
+	$index = 0;
+	$nf = false;
+	for($i = 1; $i < count($argv); $i++)
+	{
+		if($argv[$i] == '/')
 		{
-			$ns .= ' ';
+			$terms[$index] = strtolower(substr($terms[$index], 0, strlen($terms[$index])-3));
+			$index++;
 		}
-		$ns .= '*';
-		$stars = "";
-		for($i = 0; $i < strlen($ps); $i++)
+		else if($argv[$i] == '-r')
 		{
-			$stars .= "*";
+			$nf = true;
 		}
-		die("\n\n\n$stars\n$ns\n$stars\n$ps\n$stars\n\n\n");
+		$terms[$index] .= $argv[$i]."%20";
+	}
+	$terms[$index] = strtolower(substr($terms[$index], 0, strlen($terms[$index])-3));
+	$results = "";
+	foreach($terms as $key => $term)
+	{
+		$results .= search_driver($term, $nf)."\n";
+	}
+	
+	if($nf == true) 
+	{
+		echo "\n\n\n****************************************************\n*                    RESULTS                       *\n****************************************************\n";
+		echo $results;
 	}
 	else
 	{
-		$ps = "*     RSS FEED: ".$result."     *";
-		$ns = "* {$GLOBALS['name']} ";
-		$pl = strlen($ps);
-		$nl = strlen($ns);
-		$diff = 0;
-		if($nl >= $pl)
-		{
-			$diff = $nl - $pl;
-		}
-		else
-		{
-			$diff = $pl - $nl;
-		}
-		for($i = 0; $i < $diff-1; $i++)
-		{
-			$ns .= ' ';
-		}
-		$ns .= '*';
-		$stars = "";
-		for($i = 0; $i < strlen($ps); $i++)
-		{
-			$stars .= "*";
-		}
-		echo "\n\n\n$stars\n$ns\n$stars\n$ps\n$stars\n\n\n";
+		echo "\n\n".$results;
 	}
-
-	//TODO Add multiple query support
 ?>
