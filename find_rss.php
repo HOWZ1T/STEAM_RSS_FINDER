@@ -41,6 +41,7 @@
 			return $parsed_links;
 		}
 
+		$GLOBALS['name'] = str_replace("_", " ", explode("/", $parsed_links[0])[5]);
 		return $parsed_links[0];
 	}
 
@@ -339,11 +340,30 @@
 	else
 	{
 		$ps = "* RSS FEED: ".$result." *";
+		$ns = "* {$GLOBALS['name']} ";
+		$pl = strlen($ps);
+		$nl = strlen($ns);
+		$diff = 0;
+		if($nl >= $pl)
+		{
+			$diff = $nl - $pl;
+		}
+		else
+		{
+			$diff = $pl - $nl;
+		}
+		for($i = 0; $i < $diff-1; $i++)
+		{
+			$ns .= ' ';
+		}
+		$ns .= '*';
 		$stars = "";
 		for($i = 0; $i < strlen($ps); $i++)
 		{
 			$stars .= "*";
 		}
-		echo "\n\n\n$stars\n$ps\n$stars\n\n\n";
+		echo "\n\n\n$stars\n$ns\n$stars\n$ps\n$stars\n\n\n";
 	}
+
+	//TODO Add multiple query support
 ?>
