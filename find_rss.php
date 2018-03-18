@@ -435,6 +435,7 @@
 			{
 				$results .= search_driver($term, $nf)."\n";
 			}
+			$GLOBALS['name'] = "";
 		}
 
 		if($nf == true) 
