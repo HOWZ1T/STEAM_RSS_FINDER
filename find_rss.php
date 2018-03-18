@@ -411,22 +411,40 @@
 		{
 			$nf = true;
 		}
-		$terms[$index] .= $argv[$i]."%20";
+		else
+		{
+			$terms[$index] .= $argv[$i]."%20";	
+		}
 	}
 	$terms[$index] = strtolower(substr($terms[$index], 0, strlen($terms[$index])-3));
-	$results = "";
-	foreach($terms as $key => $term)
+	if(count($terms) <= 0 || (count($terms) == 1 && $terms[0] == '-r')) 
 	{
-		$results .= search_driver($term, $nf)."\n";
-	}
-	
-	if($nf == true) 
-	{
-		echo "\n\n\n****************************************************\n*                    RESULTS                       *\n****************************************************\n";
-		echo $results;
+		echo "missing search term!";
 	}
 	else
 	{
-		echo "\n\n".$results;
+		$results = "";
+		foreach($terms as $key => $term)
+		{
+			if($nf == true)
+			{
+				$res = search_driver($term, $nf);
+				$results .= strtolower($GLOBALS['name'])."=".$res."\n";
+			}
+			else
+			{
+				$results .= search_driver($term, $nf)."\n";
+			}
+		}
+
+		if($nf == true) 
+		{
+			echo "\n\n\n****************************************************\n*                    RESULTS                       *\n****************************************************\n";
+			echo $results;
+		}
+		else
+		{
+			echo "\n\n".$results;
+		}	
 	}
 ?>
