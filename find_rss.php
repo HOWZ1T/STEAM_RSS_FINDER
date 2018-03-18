@@ -138,7 +138,7 @@
 		$curl = curl_init($item_link);
 		curl_setopt($curl, CURLOPT_VERBOSE, 1);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_COOKIE, 'mature_content=1');
+		curl_setopt($curl, CURLOPT_COOKIE, 'mature_content=1; birthtime=631112401; lastagecheckage=1-January-1990; timezoneOffset=39600,0');
 		echo "requesting response via curl from: ".$item_link."\n";
 		$page = curl_exec($curl);
 		curl_close($curl);
@@ -201,11 +201,10 @@
 		$curl = curl_init($item_link);
 		curl_setopt($curl, CURLOPT_VERBOSE, 1);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_COOKIE, 'mature_content=1');
+		curl_setopt($curl, CURLOPT_COOKIE, 'mature_content=1; birthtime=631112401; lastagecheckage=1-January-1990; timezoneOffset=39600,0');
 		echo "requesting response via curl from: ".$item_link."\n";
 		$page = curl_exec($curl);
 		curl_close($curl);
-		
 		if($page == false)
 		{
 			echo "\n\ncurl request failed!\n\n";
@@ -282,7 +281,7 @@
 			$curl = curl_init($news_link);
 			curl_setopt($curl, CURLOPT_VERBOSE, 1);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_COOKIE, 'mature_content=1');
+			curl_setopt($curl, CURLOPT_COOKIE, 'mature_content=1; birthtime=631112401; lastagecheckage=1-January-1990; timezoneOffset=39600,0');
 			echo "requesting response via curl from: ".$news_link."\n";
 			$page = curl_exec($curl);
 			curl_close($curl);
